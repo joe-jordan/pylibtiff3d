@@ -2,6 +2,13 @@ import libtiff, numpy
 from libtiff.libtiff_ctypes import debug
 
 class TIFF3D(libtiff.TIFF):
+    @classmethod
+    def open(cls, filename, mode='r'):
+        tiff = libtiff.TIFFOpen(filename, mode)
+        if tiff.value is None:
+            raise TypeError ('Failed to open file '+`filename`)
+        return cls(tiff.value)
+    
     @debug
     def read_image(self, verbose=False, as3d=False):
         """Read image from TIFF and return it as a numpy array.

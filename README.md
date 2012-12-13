@@ -20,4 +20,7 @@ pylibtiff: http://code.google.com/p/pylibtiff/
     python setup.py build
     sudo python setup.py install
 
+## Thanks to:
+stackoverflow user abarnert for [this answer](http://stackoverflow.com/questions/13866706/subclassing-ctypes-pointers-how-does-this-code-work-and-how-do-i-override-it/13866964#13866964), which actually makes this library work.
+
 
