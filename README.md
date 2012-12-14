@@ -12,7 +12,7 @@ a small extension to pylibtiff to enable the automatic parsing of 3D (multi-laye
     t.write(numpy.zeros((40, 200)))
     t.close()
 
-(this will give you a white TIFF file 40px by 200px)
+(this will give you a black TIFF file 40px by 200px)
 
 Additionally, it handles 3D numpy arrays out of the box:
 
