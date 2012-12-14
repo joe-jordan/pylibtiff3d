@@ -1,19 +1,26 @@
-import libtiff, numpy
-from libtiff.libtiff_ctypes import debug
+import libtiff, numpy, libtiff.libtiff_ctypes
 
 class TIFF3D(libtiff.TIFF):
     @classmethod
     def open(cls, filename, mode='r'):
-        tiff = libtiff.TIFFOpen(filename, mode)
+        # monkey-patch the restype:
+        old_restype = libtiff.libtiff_ctypes.libtiff.TIFFOpen.restype
+        libtiff.libtiff_ctypes.libtiff.TIFFOpen.restype = TIFF3D
+        
+        # actually call the library function:
+        tiff = libtiff.libtiff_ctypes.libtiff.TIFFOpen(filename, mode)
+        
+        # restore the old restype:
+        libtiff.libtiff_ctypes.libtiff.TIFFOpen.restype = old_restype
         if tiff.value is None:
             raise TypeError ('Failed to open file '+`filename`)
-        return cls(tiff.value)
+        return tiff
     
-    @debug
-    def read_image(self, verbose=False, as3d=False):
+    @libtiff.libtiff_ctypes.debug
+    def read_image(self, verbose=False, as3d=True):
         """Read image from TIFF and return it as a numpy array.
-           if as3d is passed True, will attempt to read multiple
-           directories, and restore as slices in a 3D array.
+           if as3d is passed True (default), will attempt to read 
+           multiple directories, and restore as slices in a 3D array.
         """
         if not as3d:
             return libtiff.TIFF.read_image(self, verbose)
@@ -43,33 +50,35 @@ class TIFF3D(libtiff.TIFF):
         # in order to allocate the numpy array, we must count the directories:
         # code borrowed from libtiff.TIFF.iter_images():
         depth = 0
-        while not self.LastDirectory():
+        while True:
             depth += 1
+            if self.LastDirectory():
+                break
             self.ReadDirectory()
         self.SetDirectory(0)
         
         # we proceed assuming all directories have the same properties from above.
         layer_size = width * height * itemsize
         total_size = layer_size * depth
-        arr = np.zeros((layers, height, width), typ)
+        arr = numpy.zeros((depth, height, width), typ)
         
-        if compression==COMPRESSION_NONE:
+        if compression == libtiff.libtiff_ctypes.COMPRESSION_NONE:
             ReadStrip = self.ReadRawStrip
         else:
             ReadStrip = self.ReadEncodedStrip
         
         layer = 0
-        first = True
-        while first or not self.LastDirectory():
-            first = False
+        while True:
             pos = 0
             elem = None
             for strip in range (self.NumberOfStrips()):
                 if elem is None:
-                    elem = ReadStrip(strip, arr.ctypes.data + layer * layer_size + pos, size)
+                    elem = ReadStrip(strip, arr.ctypes.data + layer * layer_size + pos, layer_size)
                 elif elem:
-                    elem = ReadStrip(strip, arr.ctypes.data + layer * layer_size + pos, min(size - pos, elem))
+                    elem = ReadStrip(strip, arr.ctypes.data + layer * layer_size + pos, min(layer_size - pos, elem))
                 pos += elem
+            if self.LastDirectory():
+                break
             self.ReadDirectory()
             layer += 1
         self.SetDirectory(0)
