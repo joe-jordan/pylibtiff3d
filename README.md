@@ -3,6 +3,12 @@ pylibtiff3d
 
 a small extension to pylibtiff to enable the automatic parsing of 3D (multi-layered) TIFF files.
 
+## Inclusion in pylibtiff!
+
+This library is now part of the official pylibtiff distribution - the `TIFF3D` class is available for import on the `libtiff` module object.
+
+I'll leave this code up here, and the instructions below, but you shouldn't need to do anything more than install the dependencies now.
+
 ## About
 
 `pylibtiff` is a great little ctypes wrapper for Sam Leffler/Silicon Graphics' open source `libtiff`, allowing you to trivially create a TIFF file from a numpy array:
@@ -59,6 +65,8 @@ pylibtiff: http://code.google.com/p/pylibtiff/
 
 ##Installation of pylibtiff3d:
 
+no longer required - code is now installed as part of the pylibtiff step above.
+
     git clone https://github.com/joe-jordan/pylibtiff3d.git
     cd pylibtiff3d
     python setup.py build
@@ -67,4 +75,4 @@ pylibtiff: http://code.google.com/p/pylibtiff/
 ## Thanks to:
 stackoverflow user abarnert for [this answer](http://stackoverflow.com/questions/13866706/subclassing-ctypes-pointers-how-does-this-code-work-and-how-do-i-override-it/13866964#13866964), which actually makes this library work.
 
-
+[Pearu Peterson](http://code.google.com/u/pearu.peterson/) (author of pylibtiff) for giving me commit access so I could add these changes.
