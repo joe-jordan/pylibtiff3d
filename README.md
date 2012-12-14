@@ -5,7 +5,7 @@ a small extension to pylibtiff to enable the automatic parsing of 3D (multi-laye
 
 ## About
 
-`pylibtiff` is a great little ctypes wrapper for gnu `libtiff`, allowing you to trivially create a TIFF file from a numpy array:
+`pylibtiff` is a great little ctypes wrapper for Sam Leffler/Silicon Graphics' open source `libtiff`, allowing you to trivially create a TIFF file from a numpy array:
 
     import libtiff, numpy
     t = libtiff.TIFF.open('myoutput.tiff', 'w') # (t is an instance of the libtiff.TIFF class)
