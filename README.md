@@ -1,6 +1,8 @@
 pylibtiff3d
 ===========
 
+**please do not install this, it is a stale fork. Please use the main pylibtiff library, which has `TIFF3D` support, from https://github.com/pearu/pylibtiff ! Thanks.**
+
 a small extension to pylibtiff to enable the automatic parsing of 3D (multi-layered) TIFF files.
 
 ## Inclusion in pylibtiff!
